@@ -103,3 +103,29 @@ Gemini reviewed the live v1 and the rebuild brief. Adopted into this plan:
 - Keyboard: Space play/pause, ←/→ turn spreads / seek.
 Not adopted (no data or out of scope for v2.0): transliteration/translation
 layers, Larivaar toggle, Raga index, bookmarks/search.
+
+## GGS print mode (added after the Cook verification pass)
+
+A print-book display style, independent of the page-count choice:
+**Display = Scroll / GGS print** × **Pages = One / Two**.
+
+- GGS + Two: an open pothi — two printed pages side by side, 3D leaf flips.
+- GGS + One: a single printed page, slide turn.
+- Available only where a book fits: viewport ≥720px wide and ≥600px tall
+  (desktop, tablets, unfolded foldables). Below that the reader falls back
+  to scroll and the Display/Pages controls are hidden — print never
+  activates on phones.
+- Fixed pages: 1 Ang = exactly 1 printed page, always. Banis are paginated
+  once by proportional measurement (every metric in cqw/%), so the same
+  page assignment holds at any screen size — text never moves between
+  pages. A page may only shrink its own type to fit (per-page factor,
+  floor 0.74).
+- Print layout follows the printed bir and readgurbani's model: continuous
+  justified flow (text-align-last: left), shabad headings inline, Paudi
+  heads as quiet centred blocks, vishraam words coloured with symbols
+  hidden, double-rule frame, Gurmukhi folio in the top margin.
+- Flip: a preserve-3d leaf hinged at the spine carries the real page
+  elements on both faces; the next page is pre-loaded beneath; shading
+  follows sin(progress·π) with a pulsing spine shadow; 640ms
+  easeInOutCubic. Reduced motion gets an instant swap. Audio follow-along
+  flips automatically; manual flips hold the follow for 6s.

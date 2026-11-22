@@ -7,7 +7,7 @@
 <title>Gurbani Reader</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gurmukhi:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Noto+Sans+Gurmukhi:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gurmukhi:wght@400;500;600;700&family=Tiro+Gurmukhi&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Noto+Sans+Gurmukhi:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============ tokens (Gemini-calibrated themes; no pure white / pure black) ============ */
 :root{
@@ -22,7 +22,7 @@
   --ease:cubic-bezier(.32,.72,.24,1);
 }
 :root[data-theme="light"]{
-  --canvas:#FAF9F6; --desk:#ECE9E1; --page:#FDFDFA; --popover:rgba(255,255,255,.92);
+  --canvas:#F8F4EB; --desk:#ECE9E1; --page:#FBF7ED; --popover:rgba(255,255,255,.92);
   --ink:#1A1917; --ink-2:#6E6A63; --ink-3:#9B968C;
   --hairline:#E6E2D8; --accent:#B45309; --wash:#F2E6C9;
   --shadow:0 1px 2px rgba(26,25,23,.05),0 12px 40px -12px rgba(26,25,23,.18);
@@ -213,8 +213,59 @@ body.spread .sheet{background:transparent; box-shadow:none; padding:0}
 body.spread .line{text-align:justify; text-align-last:center}
 body.spread .book-head{padding:34px 20px 0}
 .turn-zone{position:fixed; top:0; bottom:0; width:64px; z-index:30; display:none}
-body.spread .turn-zone{display:block}
+body.spread .turn-zone, body.ggs .turn-zone{display:block}
 .turn-zone.prev{left:0} .turn-zone.next{right:0}
+
+/* ============ GGS print mode (fixed pages, page-flip; desktop + tablets) ============ */
+body.ggs{overflow:hidden}
+body.ggs .page-wrap{max-width:none; height:calc(100dvh - 62px); padding:calc(64px + env(safe-area-inset-top)) 12px calc(96px + env(safe-area-inset-bottom)); display:flex; align-items:center; justify-content:center}
+body.ggs .sheet{background:transparent; box-shadow:none; padding:0; width:100%; display:flex; justify-content:center}
+body.ggs .end-nav, body.ggs .end-note, body.ggs .ang-sep{display:none}
+body.ggs .tt-en{display:none}
+.ggs-vault{display:none}
+.ggs-book{position:relative; flex:none; width:min(1240px, calc(100vw - 36px), calc((100dvh - 205px) * 1.54)); aspect-ratio:1.54; perspective:3800px; filter:drop-shadow(0 10px 24px rgba(0,0,0,.22)); touch-action:pan-y}
+.ggs-book::before{content:""; position:absolute; inset:-8px -8px -11px; background:linear-gradient(140deg, #4A2C1C, #31200F); border-radius:7px 11px 11px 7px; z-index:-1}
+body.ggs[data-ggs-per="1"] .ggs-book::before{border-radius:11px}
+:root[data-theme="dark"] .ggs-book::before{background:linear-gradient(140deg, #2A1D13, #191008)}
+.ggs-book.dragging{user-select:none; cursor:grabbing}
+body.ggs[data-ggs-per="1"] .ggs-book{width:min(620px, calc(100vw - 36px), calc((100dvh - 205px) * .77)); aspect-ratio:.77}
+.gpg{position:absolute; top:0; bottom:0; width:50%; background:var(--page); background-image:radial-gradient(115% 90% at 50% 38%, rgba(0,0,0,0) 62%, color-mix(in srgb, var(--ink) 5%, transparent)); padding:2.4% 2.6%; display:flex; flex-direction:column; container-type:inline-size}
+.gpg.left{left:0; padding-right:1.7%; border-radius:4px 2px 2px 4px; box-shadow:inset -13px 0 22px -15px rgba(0,0,0,.30)}
+.gpg.right{right:0; padding-left:1.7%; border-radius:2px 4px 4px 2px; box-shadow:inset 13px 0 22px -15px rgba(0,0,0,.30)}
+body.ggs[data-ggs-per="1"] .gpg{width:100%; left:0; border-radius:5px; box-shadow:none}
+.ggs-folio{font-family:var(--serif); font-weight:600; font-size:2.85cqw; color:var(--ink); margin:0 1px 1.0cqw; display:flex}
+.gpg.left .ggs-folio{justify-content:flex-start}
+.gpg.right .ggs-folio{justify-content:flex-end}
+.ggs-frame{flex:1; border:2.2px solid var(--frame); box-shadow:inset 0 0 0 3.5px var(--page), inset 0 0 0 4.5px var(--frame);
+  padding:4cqw 4.4cqw; overflow:hidden; position:relative;
+  font-family:"Tiro Gurmukhi", var(--serif); font-weight:600; font-size:calc(3.25cqw * var(--ggs-scale, 1));
+  line-height:1.78; text-align:justify; text-align-last:left; color:var(--ink)}
+.ggs-frame .line{display:inline; margin:0; font-family:inherit; font-size:inherit; line-height:inherit; font-weight:inherit}
+.ggs-frame .line::after{content:" "}
+.ggs-frame .section-head{display:none}
+.ggs-frame .book-head{text-align:center; text-align-last:center; padding-top:13%; margin-bottom:0}
+.ggs-frame .book-head .ornament{display:none}
+.ggs-frame .book-head::before{content:"ੴ"; display:block; font-family:var(--serif); font-size:calc(3.6cqw * var(--ggs-scale, 1)); color:var(--accent); margin-bottom:.45em}
+.ggs-frame .book-head .pa-title{font-size:calc(5.2cqw * var(--ggs-scale, 1)); line-height:1.35}
+.ggs-frame .book-head .en-title{font-size:calc(2.2cqw * var(--ggs-scale, 1))}
+.ggs-frame .book-head .loc{font-size:calc(1.9cqw * var(--ggs-scale, 1))}
+.ggs-frame .book-head .rule{margin-top:1.1em}
+.ggs-book .ggs-shadow{position:absolute; top:0; bottom:0; left:50%; width:11%; transform:translateX(-50%); z-index:4; pointer-events:none; opacity:.16;
+  background:linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,.20), rgba(0,0,0,0))}
+body.ggs[data-ggs-per="1"] .ggs-shadow{display:none}
+.ggs-leaf{position:absolute; top:0; bottom:0; left:50%; width:50%; z-index:6; transform-origin:left center; transform-style:preserve-3d; pointer-events:none}
+.leaf-face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden}
+.leaf-face.back{transform:rotateY(180deg)}
+.leaf-face .gpg{position:absolute; inset:0; width:100%; height:100%; z-index:1}
+.leaf-shade{position:absolute; inset:0; background:linear-gradient(90deg, rgba(26,20,8,.52), rgba(26,20,8,.07) 55%, rgba(26,20,8,0) 78%); opacity:0; pointer-events:none; z-index:2}
+.leaf-face.back .leaf-shade{background:linear-gradient(270deg, rgba(26,20,8,.52), rgba(26,20,8,.07) 55%, rgba(26,20,8,0) 78%)}
+.leaf-face.front::after{content:""; position:absolute; top:0; bottom:0; right:0; width:1px; background:rgba(255,255,255,.40); z-index:3}
+.leaf-face.back::after{content:""; position:absolute; top:0; bottom:0; left:0; width:1px; background:rgba(255,255,255,.40); z-index:3}
+.ggs-cast{position:absolute; top:0; bottom:0; width:50%; z-index:5; pointer-events:none; opacity:0}
+.ggs-cast.r{right:0; background:linear-gradient(90deg, rgba(20,14,4,.36), rgba(20,14,4,0) 75%)}
+.ggs-cast.l{left:0; background:linear-gradient(270deg, rgba(20,14,4,.36), rgba(20,14,4,0) 75%)}
+.gpg.blank .ggs-frame{border-color:color-mix(in srgb, var(--frame) 55%, transparent); box-shadow:inset 0 0 0 3.5px var(--page), inset 0 0 0 4.5px color-mix(in srgb, var(--frame) 55%, transparent)}
+
 
 /* ============ player pill + expanded card ============ */
 .player{position:fixed; left:50%; transform:translateX(-50%); z-index:45;
@@ -287,7 +338,7 @@ body.chrome-off .player{opacity:0; pointer-events:none; transform:translate(-50%
   background:var(--popover); border:1px solid var(--hairline); box-shadow:var(--shadow); border-radius:999px;
   padding:10px 18px; font-size:13.5px; opacity:0; pointer-events:none; transition:.3s var(--ease); max-width:calc(100vw - 40px); text-align:center}
 .toast.show{opacity:1; transform:translate(-50%,0)}
-@media(max-width:999px){ #pagesSec{display:none} }
+@media(max-width:719px), (max-height:599px){ #pagesSec{display:none} }
 @media(prefers-reduced-motion:reduce){ *{transition-duration:.01ms !important} }
 </style>
 </head>
@@ -427,7 +478,11 @@ body.chrome-off .player{opacity:0; pointer-events:none; transform:translate(-50%
       </div>
     </div>
     <div class="aa-sec" id="pagesSec">
-      <h3>Pages · Desktop</h3>
+      <h3>Display</h3>
+      <div class="seg" id="displaySeg">
+        <button data-display="scroll">Scroll</button><button data-display="ggs">GGS print</button>
+      </div>
+      <h3 style="margin-top:14px">Pages</h3>
       <div class="seg" id="pagesSeg">
         <button data-pages="one">One page</button><button data-pages="two">Two pages</button>
       </div>
@@ -491,10 +546,16 @@ var preAudio = new Audio(); preAudio.preload = "auto";
 var pendingSeek = 0, pendingRestore = null, manualScrollAt = 0, autoScrolling = false;
 var flashArmed = true, flashEl = null, flashTimer = 0;
 var hlMode = "off", autoScrollOn = true, pagesMode = "one";
+var displayMode = "scroll", pageCount = 2;
+function syncPagesMode(){ pagesMode = displayMode === "ggs" ? "ggs" : (pageCount === 2 ? "two" : "one"); }
 try{
   var hm = localStorage.getItem("gr2:hlmode"); if(hm === "sentence" || hm === "word") hlMode = hm;
   var asv = localStorage.getItem("gr2:autoscroll"); if(asv !== null) autoScrollOn = asv === "1";
-  var pg = localStorage.getItem("gr2:pages"); if(pg === "two") pagesMode = "two";
+  var dsv = localStorage.getItem("gr2:display"), pcv = localStorage.getItem("gr2:count"), pg0 = localStorage.getItem("gr2:pages");
+  if(dsv === "ggs" || dsv === "scroll") displayMode = dsv;
+  if(pcv === "1" || pcv === "2") pageCount = Number(pcv);
+  if(!dsv && !pcv && pg0){ if(pg0 === "two"){ displayMode = "scroll"; pageCount = 2; } else if(pg0 === "ggs"){ displayMode = "ggs"; pageCount = 2; } else if(pg0 === "one"){ displayMode = "scroll"; pageCount = 1; } }
+  syncPagesMode();
 }catch(e){}
 
 /* ================= theme / appearance ================= */
@@ -522,6 +583,7 @@ function setFontSize(px){
   $("sizeRange").value = fontSize;
   try{ localStorage.setItem("gr2:fontsize", String(fontSize)); }catch(e){}
   if(document.body.classList.contains("spread")) relayoutSpreadSoon();
+  if(document.body.classList.contains("ggs")){ setGgsScale(); relayoutGgsSoon(); }
 }
 $("sizeRange").addEventListener("input", function(){ setFontSize(Number(this.value)); });
 $("sizeUp").addEventListener("click", function(){ setFontSize(fontSize + 1); });
@@ -595,7 +657,7 @@ function paintContinue(){
 
 /* ================= views / chrome ================= */
 function openReader(){ document.body.setAttribute("data-view", "reader"); document.body.classList.remove("chrome-off"); }
-function openLibrary(){ pauseAudio(); document.body.setAttribute("data-view", "library"); paintContinue(); window.scrollTo(0, 0); }
+function openLibrary(){ pauseAudio(); exitSpread(); exitGgs(); document.body.setAttribute("data-view", "library"); paintContinue(); window.scrollTo(0, 0); }
 $("backBtn").addEventListener("click", openLibrary);
 var fsBtn = $("fsBtn");
 if(document.documentElement.requestFullscreen && window.matchMedia("(min-width: 1000px)").matches) fsBtn.style.display = "";
@@ -638,7 +700,8 @@ function paintSegs(){
   document.querySelectorAll("#hlSeg button, #hlSeg2 button").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-hl") === hlMode); });
   $("asSwitch").classList.toggle("on", autoScrollOn);
   $("asSwitch").setAttribute("aria-checked", String(autoScrollOn));
-  document.querySelectorAll("#pagesSeg button").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-pages") === pagesMode); });
+  document.querySelectorAll("#displaySeg button").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-display") === displayMode); });
+  document.querySelectorAll("#pagesSeg button").forEach(function(b){ b.classList.toggle("active", (b.getAttribute("data-pages") === "two") === (pageCount === 2)); });
 }
 function setHlMode(m){
   hlMode = m;
@@ -654,11 +717,18 @@ $("asSwitch").addEventListener("click", function(){
   if(autoScrollOn){ manualScrollAt = 0; }
   paintSegs();
 });
+document.querySelectorAll("#displaySeg button").forEach(function(b){
+  b.addEventListener("click", function(){
+    displayMode = b.getAttribute("data-display");
+    try{ localStorage.setItem("gr2:display", displayMode); }catch(e){}
+    syncPagesMode(); paintSegs(); applyPagesMode();
+  });
+});
 document.querySelectorAll("#pagesSeg button").forEach(function(b){
   b.addEventListener("click", function(){
-    pagesMode = b.getAttribute("data-pages");
-    try{ localStorage.setItem("gr2:pages", pagesMode); }catch(e){}
-    paintSegs(); applyPagesMode();
+    pageCount = b.getAttribute("data-pages") === "two" ? 2 : 1;
+    try{ localStorage.setItem("gr2:count", String(pageCount)); }catch(e){}
+    syncPagesMode(); paintSegs(); applyPagesMode();
   });
 });
 paintSegs();
@@ -983,6 +1053,7 @@ function autoScrollToCurrentLine(){
   if(li < 0) return;
   var lineEl = contentEl.querySelector('.line[data-li="' + li + '"]');
   if(!lineEl) return;
+  if(document.body.classList.contains("ggs")){ ggsFollowLine(lineEl); return; }
   if(document.body.classList.contains("spread")){
     var spread = lineEl.closest(".spread-row");
     if(!spread) return;
@@ -1080,7 +1151,7 @@ function maybeCoachmark(){
 function loadBani(b, autoplay){
   if(!b) return;
   var token = ++state.loadToken;
-  exitSpread();
+  exitSpread(); exitGgs();
   state.mode = "bani"; state.id = b.id; state.ang = null;
   pauseAudio(); setLoading(b.pa); window.scrollTo(0, 0); showChrome();
   fetchJSON(baniDataUrl(b)).then(function(json){
@@ -1112,7 +1183,7 @@ function loadBani(b, autoplay){
 function currentSpeed(){ var b = $("speedSeg").querySelector("button.active"); return b ? Number(b.getAttribute("data-speed")) || 1 : 1; }
 function loadAng(ang, autoplay){
   var token = ++state.loadToken;
-  exitSpread();
+  exitSpread(); exitGgs();
   state.mode = "ang"; state.ang = ang; state.id = null;
   var paTitle = "ਅੰਗ " + paNum(ang);
   pauseAudio(); setLoading(paTitle); window.scrollTo(0, 0); showChrome();
@@ -1188,6 +1259,7 @@ function appendAng(ang, opts){
     state.streamAngs.push(ang);
     observeTail(); pruneStream();
     if(document.body.classList.contains("spread")) layoutSpreads();
+    if(document.body.classList.contains("ggs")) layoutGgs();
     if(opts.play){ switchAudioToAng(ang, true); scrollToAngStart(ang); }
   }).catch(function(){ state.appending = false; if(opts.play) loadAng(ang, true); });
 }
@@ -1204,7 +1276,7 @@ function viewportAng(){
   return best;
 }
 function pruneStream(){
-  if(state.mode !== "ang" || document.body.classList.contains("spread")) return;
+  if(state.mode !== "ang" || document.body.classList.contains("spread") || document.body.classList.contains("ggs")) return;
   var keep = {};
   if(state.ang) keep[state.ang] = true;
   var va = viewportAng(); if(va) keep[va] = true;
@@ -1321,6 +1393,7 @@ function appendBani(id, opts){
     state.streamBanis.push(id);
     observeBaniTail(); pruneBaniStream();
     if(document.body.classList.contains("spread")) layoutSpreads();
+    if(document.body.classList.contains("ggs")) layoutGgs();
     if(opts.play){ switchAudioToBani(id, true); scrollToBaniStart(id); }
   }).catch(function(){ state.appendingBani = false; if(opts.play) loadBani(b, true); });
 }
@@ -1328,7 +1401,7 @@ function renderedBanis(){
   return state.streamBanis.filter(function(id){ return !!contentEl.querySelector('section.stream-sec[data-bani="' + id + '"]'); });
 }
 function pruneBaniStream(){
-  if(state.mode !== "bani" || document.body.classList.contains("spread")) return;
+  if(state.mode !== "bani" || document.body.classList.contains("spread") || document.body.classList.contains("ggs")) return;
   var rend = renderedBanis();
   if(rend.length <= 2) return;
   var audioIdx = state.streamBanis.indexOf(state.id);
@@ -1402,13 +1475,19 @@ audio.addEventListener("ended", function(){
 });
 
 /* ================= spread mode (desktop pothi) ================= */
-function spreadEligible(){ return window.matchMedia("(min-width: 1000px)").matches; }
+function spreadEligible(){ return window.matchMedia("(min-width: 720px) and (min-height: 600px)").matches; }
 function applyPagesMode(){
-  if(pagesMode === "two" && spreadEligible() && document.body.getAttribute("data-view") === "reader"){
+  var inReader = document.body.getAttribute("data-view") === "reader";
+  if(inReader && pagesMode === "ggs" && spreadEligible()){
+    exitSpread();
+    document.body.classList.add("ggs");
+    layoutGgs();
+  } else if(inReader && pagesMode === "two" && spreadEligible()){
+    exitGgs();
     document.body.classList.add("spread");
     layoutSpreads();
   } else {
-    exitSpread();
+    exitSpread(); exitGgs();
   }
 }
 function exitSpread(){
@@ -1418,8 +1497,10 @@ function exitSpread(){
 }
 var spreadRelayoutTimer = 0;
 function relayoutSpreadSoon(){ clearTimeout(spreadRelayoutTimer); spreadRelayoutTimer = setTimeout(function(){ if(document.body.classList.contains("spread")) layoutSpreads(); }, 220); }
+var lastBookEligible = spreadEligible();
 window.addEventListener("resize", function(){
-  if(pagesMode === "two") applyPagesMode();
+  var el = spreadEligible();
+  if(el !== lastBookEligible){ lastBookEligible = el; if(pagesMode !== "one") applyPagesMode(); }
   relayoutSpreadSoon();
 });
 /* Build page units from the current DOM, then pair them into spreads.
@@ -1543,15 +1624,409 @@ function turnSpread(dir){
   var next = rows[Math.min(rows.length - 1, Math.max(0, idx + dir))];
   if(next) window.scrollTo({top: next.offsetTop - 66, behavior:"smooth"});
 }
-$("turnNext").addEventListener("click", function(){ turnSpread(1); });
-$("turnPrev").addEventListener("click", function(){ turnSpread(-1); });
+$("turnNext").addEventListener("click", function(){ if(document.body.classList.contains("ggs")){ ggsLastManualFlip = Date.now(); ggsFlip(1); } else turnSpread(1); });
+$("turnPrev").addEventListener("click", function(){ if(document.body.classList.contains("ggs")){ ggsLastManualFlip = Date.now(); ggsFlip(-1); } else turnSpread(-1); });
 document.addEventListener("keydown", function(e){
   if(document.body.getAttribute("data-view") !== "reader") return;
   if(e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
   if(e.code === "Space"){ e.preventDefault(); audio.paused ? playAudio() : pauseAudio(); }
-  else if(e.key === "ArrowRight"){ if(document.body.classList.contains("spread")) turnSpread(1); else seekTo((audio.currentTime || 0) + 15); }
-  else if(e.key === "ArrowLeft"){ if(document.body.classList.contains("spread")) turnSpread(-1); else seekTo((audio.currentTime || 0) - 15); }
+  else if(e.key === "ArrowRight"){ if(document.body.classList.contains("ggs")){ ggsLastManualFlip = Date.now(); ggsFlip(1); } else if(document.body.classList.contains("spread")) turnSpread(1); else seekTo((audio.currentTime || 0) + 15); }
+  else if(e.key === "ArrowLeft"){ if(document.body.classList.contains("ggs")){ ggsLastManualFlip = Date.now(); ggsFlip(-1); } else if(document.body.classList.contains("spread")) turnSpread(-1); else seekTo((audio.currentTime || 0) - 15); }
 });
+
+
+/* ================= GGS print mode =================
+   Fixed printed pages: for Angs the page assignment is the Ang itself;
+   for Banis pages are measured once at reference geometry (all metrics
+   are proportional — cqw / % — so the assignment holds at any size).
+   Text never moves between pages. Desktop + tablets only. */
+var ggsPages = [], ggsIndex = 0, ggsFlipping = false, ggsVault = null, ggsBookEl = null;
+var ggsFitMap = {}, ggsLastManualFlip = 0, ggsEnsurePending = false, ggsBlankEl = null;
+function ggsPer(){ return pageCount === 2 ? 2 : 1; }
+function ggsViews(){ return Math.max(1, Math.ceil(ggsPages.length / ggsPer())); }
+function setGgsScale(){
+  var s = Math.round((fontSize / 21) * 1000) / 1000;
+  document.documentElement.style.setProperty("--ggs-scale", String(s));
+}
+var ggsRelayoutTimer = 0;
+function relayoutGgsSoon(){ clearTimeout(ggsRelayoutTimer); ggsRelayoutTimer = setTimeout(function(){ if(document.body.classList.contains("ggs")) layoutGgs(); }, 240); }
+function exitGgs(){
+  if(!document.body.classList.contains("ggs")) return;
+  document.body.classList.remove("ggs");
+  unwrapGgs();
+}
+function buildGgsPageEl(u, side){
+  var pg = document.createElement("div");
+  pg.className = "gpg " + side;
+  pg.setAttribute("data-unit", u.key);
+  if(u.owner) pg.setAttribute("data-owner", u.owner);
+  if(u.folio){
+    var folio = document.createElement("div");
+    folio.className = "ggs-folio"; folio.textContent = u.folio;
+    pg.appendChild(folio);
+  }
+  var frame = document.createElement("div");
+  frame.className = "ggs-frame";
+  u.nodes.forEach(function(n){ frame.appendChild(n); });
+  pg.appendChild(frame);
+  u.el = pg;
+  return pg;
+}
+var ggsLayoutQueued = false;
+function layoutGgs(){
+  if(ggsFlipping){ ggsLayoutQueued = true; return; }
+  var keep = ggsIndex;
+  unwrapGgs();
+  ggsEnsurePending = false;
+  setGgsScale();
+  if(!state.mode) return;
+  var units = [];
+  var headEl = contentEl.querySelector(".book-head");
+  if(state.mode === "ang"){
+    if(headEl) headEl.style.display = "none";
+    state.streamAngs.forEach(function(a){
+      var sec = contentEl.querySelector('section[data-ang="' + a + '"]');
+      if(!sec) return;
+      var sep = document.getElementById("ang-sep-" + a);
+      if(sep) sep.style.display = "none";
+      units.push({key:"ang-" + a, folio:"ਅੰਗ " + paNum(a), nodes:[sec], sep:sep, owner:null});
+    });
+  } else {
+    var pageNo = 0;
+    var sections = contentEl.querySelectorAll("section.section");
+    var probeWrap = document.createElement("div");
+    probeWrap.style.cssText = "position:absolute; visibility:hidden; left:-9999px; top:0; width:" + (ggsPer() === 2 ? 1240 : 620) + "px;";
+    var probeBook = document.createElement("div"); probeBook.className = "ggs-book"; probeBook.style.width = "100%";
+    var probePg = document.createElement("div"); probePg.className = "gpg right";
+    var probeFolio = document.createElement("div"); probeFolio.className = "ggs-folio"; probeFolio.textContent = "ਪੰਨਾ ੧";
+    var probeFrame = document.createElement("div"); probeFrame.className = "ggs-frame";
+    probePg.appendChild(probeFolio); probePg.appendChild(probeFrame); probeBook.appendChild(probePg); probeWrap.appendChild(probeBook);
+    document.body.appendChild(probeWrap);
+    var cur = [];
+    var flowKey = state.id || "bani";
+    function flush(){
+      if(!cur.length) return;
+      pageNo++;
+      units.push({key:flowKey + "-p" + pageNo, owner:null, folio:"ਪੰਨਾ " + paNum(pageNo), nodes:cur, sep:null});
+      cur = [];
+      probeFrame.innerHTML = "";
+    }
+    sections.forEach(function(sec, sIdx){
+      var key = sec.getAttribute("data-bani") || state.id || "bani";
+      var stamp = "sec-" + sIdx + "-" + key;
+      sec.setAttribute("data-stamp", stamp);
+      var kids = Array.prototype.slice.call(sec.childNodes).filter(function(n){ return n.nodeType === 1; });
+      kids.forEach(function(node){
+        node.setAttribute("data-ggs-owner", stamp);
+        var clone = node.cloneNode(true);
+        probeFrame.appendChild(clone);
+        if(probeFrame.scrollHeight > probeFrame.clientHeight + 2 && cur.length){
+          probeFrame.removeChild(clone);
+          flush();
+          probeFrame.appendChild(clone);
+        }
+        cur.push(node);
+      });
+    });
+    flush();
+    document.body.removeChild(probeWrap);
+    if(headEl && headEl.parentNode === contentEl){
+      units.unshift({key:"title-page", folio:"", nodes:[headEl], sep:null, owner:null, titlePage:true});
+    }
+  }
+  if(!units.length) return;
+  document.body.setAttribute("data-ggs-per", String(ggsPer()));
+  ggsVault = document.createElement("div");
+  ggsVault.className = "ggs-vault";
+  contentEl.appendChild(ggsVault);
+  units.forEach(function(u, i){
+    var side = ggsPer() === 2 ? (i % 2 === 0 ? "left" : "right") : "left";
+    buildGgsPageEl(u, side);
+    ggsVault.appendChild(u.el);
+  });
+  ggsPages = units;
+  ggsBookEl = document.createElement("div");
+  ggsBookEl.className = "ggs-book";
+  ggsBookEl.innerHTML = '<div class="ggs-shadow"></div>';
+  var anchor = contentEl.querySelector(".end-nav");
+  if(anchor) contentEl.insertBefore(ggsBookEl, anchor); else contentEl.appendChild(ggsBookEl);
+  attachGgsDrag(ggsBookEl);
+  ggsFixDandaJoins();
+  ggsShowSpread(Math.min(keep, ggsViews() - 1));
+  ggsEnsure();
+}
+function ggsShowSpread(i){
+  if(!ggsBookEl || !ggsVault) return;
+  ggsIndex = Math.max(0, Math.min(ggsViews() - 1, i || 0));
+  ggsPages.forEach(function(u){ if(u.el && u.el.parentNode !== ggsVault) ggsVault.appendChild(u.el); });
+  if(ggsBlankEl && ggsBlankEl.parentNode) ggsBlankEl.parentNode.removeChild(ggsBlankEl);
+  var per = ggsPer();
+  for(var k = 0; k < per; k++){
+    var u = ggsPages[ggsIndex * per + k];
+    if(u) ggsBookEl.appendChild(u.el);
+  }
+  if(per === 2 && ggsPages.length && !ggsPages[ggsIndex * 2 + 1]){
+    if(!ggsBlankEl){
+      ggsBlankEl = document.createElement("div");
+      ggsBlankEl.className = "gpg right blank";
+      ggsBlankEl.innerHTML = '<div class="ggs-frame"></div>';
+    }
+    ggsBookEl.appendChild(ggsBlankEl);
+  }
+  ggsFitVisible();
+}
+function ggsFitVisible(){
+  requestAnimationFrame(function(){
+    var per = ggsPer();
+    for(var k = 0; k < per; k++){ var u = ggsPages[ggsIndex * per + k]; if(u) ggsFitPage(u.el); }
+  });
+}
+function ggsFitPage(pg){
+  if(!pg) return;
+  var frame = pg.querySelector(".ggs-frame"); if(!frame) return;
+  var key = pg.getAttribute("data-unit");
+  var f = ggsFitMap[key] || 1;
+  frame.style.fontSize = "calc(" + (3.25 * f) + "cqw * var(--ggs-scale, 1))";
+  var guard = 0;
+  while(frame.scrollHeight > frame.clientHeight + 2 && f > 0.74 && guard < 9){
+    f = Math.round((f - 0.03) * 100) / 100;
+    frame.style.fontSize = "calc(" + (3.25 * f) + "cqw * var(--ggs-scale, 1))";
+    guard++;
+  }
+  ggsFitMap[key] = f;
+}
+function ggsEnsure(){
+  if(ggsEnsurePending || !document.body.classList.contains("ggs")) return;
+  if(ggsIndex < ggsViews() - 2) return;
+  if(state.mode === "ang"){
+    var last = state.streamAngs[state.streamAngs.length - 1];
+    if(last && last < 1430){ ggsEnsurePending = true; appendAng(last + 1); }
+  } else if(state.mode === "bani"){
+    var lastB = state.streamBanis[state.streamBanis.length - 1];
+    var nxt = chainNext(lastB);
+    if(nxt && state.streamBanis.indexOf(nxt) < 0){ ggsEnsurePending = true; appendBani(nxt); }
+  }
+}
+function ggsBuildLeaf(dir){
+  var target = ggsIndex + dir;
+  if(target < 0 || target >= ggsViews()) return null;
+  var curL = ggsPages[ggsIndex * 2], curR = ggsPages[ggsIndex * 2 + 1];
+  var nxtL = ggsPages[target * 2], nxtR = ggsPages[target * 2 + 1];
+  var leaf = document.createElement("div");
+  leaf.className = "ggs-leaf";
+  var front = document.createElement("div"); front.className = "leaf-face front";
+  var back = document.createElement("div"); back.className = "leaf-face back";
+  var frontShade = document.createElement("div"); frontShade.className = "leaf-shade";
+  var backShade = document.createElement("div"); backShade.className = "leaf-shade";
+  leaf.appendChild(front); leaf.appendChild(back);
+  var castL = document.createElement("div"); castL.className = "ggs-cast l";
+  var castR = document.createElement("div"); castR.className = "ggs-cast r";
+  if(dir > 0){
+    if(curR) front.appendChild(curR.el);
+    front.appendChild(frontShade);
+    if(nxtL) back.appendChild(nxtL.el);
+    back.appendChild(backShade);
+    if(nxtR) ggsBookEl.appendChild(nxtR.el);
+    else if(ggsBlankEl) ggsBookEl.appendChild(ggsBlankEl);
+  } else {
+    if(nxtR) front.appendChild(nxtR.el);
+    front.appendChild(frontShade);
+    if(curL) back.appendChild(curL.el);
+    back.appendChild(backShade);
+    if(nxtL) ggsBookEl.appendChild(nxtL.el);
+    leaf.style.transform = "rotateY(-180deg)";
+  }
+  ggsBookEl.appendChild(castL); ggsBookEl.appendChild(castR);
+  ggsBookEl.appendChild(leaf);
+  void ggsBookEl.offsetWidth; /* the revealed page is painted before the first frame */
+  return {leaf:leaf, frontShade:frontShade, backShade:backShade, castL:castL, castR:castR,
+          shadow:ggsBookEl.querySelector(".ggs-shadow"), dir:dir, target:target,
+          from: dir > 0 ? 0 : -180, to: dir > 0 ? -180 : 0, shadeMul:1};
+}
+function ggsSetLeafAngle(b, ang){
+  b.leaf.style.transform = "rotateY(" + ang + "deg)";
+  var pr = b.dir > 0 ? -ang / 180 : (ang + 180) / 180;
+  pr = Math.min(1, Math.max(0, pr));
+  var env = Math.sin(pr * Math.PI);
+  b.frontShade.style.opacity = String(0.55 * env * b.shadeMul);
+  b.backShade.style.opacity = String(0.50 * env * b.shadeMul);
+  if(b.shadow) b.shadow.style.opacity = String(0.16 + 0.70 * env);
+  var rise = Math.sin(Math.min(1, pr / 0.55) * Math.PI * 0.5);
+  var land = pr < 0.45 ? 0 : Math.sin(Math.min(1, (pr - 0.45) / 0.55) * Math.PI * 0.5);
+  var out = pr > 0.94 ? (1 - pr) / 0.06 : 1;
+  if(b.dir > 0){ b.castR.style.opacity = String(0.85 * rise * out); b.castL.style.opacity = String(0.85 * land * out); }
+  else { b.castL.style.opacity = String(0.85 * rise * out); b.castR.style.opacity = String(0.85 * land * out); }
+}
+function ggsFinishFlip(b, complete){
+  b.leaf.remove(); b.castL.remove(); b.castR.remove();
+  if(b.shadow) b.shadow.style.opacity = "";
+  ggsFlipping = false;
+  ggsShowSpread(complete ? b.target : ggsIndex);
+  if(complete) ggsEnsure();
+  if(ggsLayoutQueued){ ggsLayoutQueued = false; layoutGgs(); }
+}
+function animateLeaf(b, fromAng, toAng, dur, complete){
+  var t0 = performance.now();
+  function ease(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function step(now){
+    var pr = Math.min(1, (now - t0) / dur);
+    ggsSetLeafAngle(b, fromAng + (toAng - fromAng) * ease(pr));
+    if(pr < 1) requestAnimationFrame(step);
+    else ggsFinishFlip(b, complete);
+  }
+  requestAnimationFrame(step);
+}
+function ggsFlip(dir, quiet){
+  if(ggsFlipping || !ggsBookEl) return;
+  var target = ggsIndex + dir;
+  if(target < 0) return;
+  if(target >= ggsViews()){ ggsEnsure(); return; }
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ ggsShowSpread(target); ggsEnsure(); return; }
+  if(ggsPer() === 1){ ggsSlideTurn(dir, target); return; }
+  var b = ggsBuildLeaf(dir);
+  if(!b) return;
+  b.shadeMul = quiet ? 0.55 : 1;
+  ggsFlipping = true;
+  animateLeaf(b, b.from, b.to, quiet ? 430 : 560, true);
+}
+function ggsSlideTurn(dir, target){
+  var cur = ggsPages[ggsIndex], nxt = ggsPages[target];
+  if(!nxt){ return; }
+  ggsFlipping = true;
+  var curEl = cur && cur.el, nxtEl = nxt.el;
+  ggsBookEl.appendChild(nxtEl);
+  var org = dir > 0 ? "left center" : "right center";
+  nxtEl.style.cssText = "opacity:0; transform:translateX(" + (dir > 0 ? 36 : -36) + "px) rotateY(" + (dir > 0 ? 5 : -5) + "deg); transform-origin:" + org;
+  requestAnimationFrame(function(){
+    nxtEl.style.cssText = "opacity:1; transform:translateX(0) rotateY(0deg); transform-origin:" + org + "; transition:opacity .38s ease, transform .38s cubic-bezier(.25,.7,.3,1)";
+    if(curEl) curEl.style.cssText = "opacity:0; transform:translateX(" + (dir > 0 ? -36 : 36) + "px) rotateY(" + (dir > 0 ? -6 : 6) + "deg); transform-origin:" + org + "; transition:opacity .38s ease, transform .38s cubic-bezier(.25,.7,.3,1)";
+    setTimeout(function(){
+      if(curEl){ curEl.style.cssText = ""; }
+      nxtEl.style.cssText = "";
+      ggsFlipping = false;
+      ggsShowSpread(target);
+      ggsEnsure();
+      if(ggsLayoutQueued){ ggsLayoutQueued = false; layoutGgs(); }
+    }, 400);
+  });
+}
+function ggsFollowLine(lineEl){
+  if(ggsFlipping) return;
+  var pg = lineEl.closest(".gpg");
+  maybeFlash(lineEl);
+  if(!pg) return;
+  var idx = -1;
+  ggsPages.forEach(function(u, i){ if(u.el === pg) idx = i; });
+  if(idx < 0) return;
+  var view = Math.floor(idx / ggsPer());
+  if(view === ggsIndex) return;
+  if(Date.now() - ggsLastManualFlip < 6000) return;
+  if(Math.abs(view - ggsIndex) === 1) ggsFlip(view - ggsIndex, true);
+  else ggsShowSpread(view);
+}
+function attachGgsDrag(book){
+  var drag = null;
+  book.addEventListener("pointerdown", function(e){
+    if(ggsFlipping || (e.button !== undefined && e.button > 0)) return;
+    drag = {x0:e.clientX, y0:e.clientY, active:false, b:null, dir:0, ang:0, lastX:e.clientX, lastT:performance.now(), vel:0, pid:e.pointerId};
+  });
+  book.addEventListener("pointermove", function(e){
+    if(!drag || e.pointerId !== drag.pid) return;
+    var now = performance.now();
+    var dt = now - drag.lastT;
+    if(dt > 0){ drag.vel = 0.7 * drag.vel + 0.3 * ((e.clientX - drag.lastX) / dt); drag.lastX = e.clientX; drag.lastT = now; }
+    var dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if(!drag.active){
+      if(Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+      if(ggsPer() === 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches){ drag = null; return; }
+      var dir = dx < 0 ? 1 : -1;
+      if(ggsIndex + dir < 0){ drag = null; return; }
+      if(ggsIndex + dir >= ggsViews()){ ggsEnsure(); drag = null; return; }
+      var b = ggsBuildLeaf(dir);
+      if(!b){ drag = null; return; }
+      drag.active = true; drag.dir = dir; drag.b = b; drag.ang = b.from;
+      ggsFlipping = true;
+      try{ book.setPointerCapture(e.pointerId); }catch(err){}
+      book.classList.add("dragging");
+    }
+    var w = Math.max(120, book.clientWidth / 2);
+    var frac = Math.max(-1, Math.min(1, dx / w));
+    var ang = drag.dir > 0 ? Math.min(0, 180 * frac) : Math.max(-180, -180 * (1 - frac));
+    drag.ang = ang;
+    ggsSetLeafAngle(drag.b, ang);
+  });
+  function endDrag(){
+    if(!drag) return;
+    var d = drag; drag = null;
+    if(!d.active) return;
+    book.classList.remove("dragging");
+    ggsLastManualFlip = Date.now();
+    var b = d.b;
+    var pr = d.dir > 0 ? -d.ang / 180 : (d.ang + 180) / 180;
+    var velOk = d.dir > 0 ? d.vel < -0.45 : d.vel > 0.45;
+    var complete = pr > 0.32 || velOk;
+    var to = complete ? b.to : b.from;
+    var remain = Math.abs(to - d.ang) / 180;
+    animateLeaf(b, d.ang, to, Math.max(140, 520 * remain), complete);
+    var swallow = function(ev){ ev.stopPropagation(); ev.preventDefault(); };
+    book.addEventListener("click", swallow, {capture:true, once:true});
+    setTimeout(function(){ book.removeEventListener("click", swallow, {capture:true}); }, 400);
+  }
+  book.addEventListener("pointerup", endDrag);
+  book.addEventListener("pointercancel", endDrag);
+}
+var ggsDandaFixes = [];
+function ggsFixDandaJoins(){
+  ggsPages.forEach(function(u){
+    if(!u.el) return;
+    var frame = u.el.querySelector(".ggs-frame"); if(!frame) return;
+    var prevDanda = false;
+    frame.querySelectorAll(".line").forEach(function(line){
+      var txt = line.textContent || "";
+      if(prevDanda){
+        var n = line.firstChild;
+        if(n && n.nodeType === 3){
+          var m = /^\s*॥\s*/.exec(n.textContent);
+          if(m){ ggsDandaFixes.push({node:n, text:n.textContent}); n.textContent = n.textContent.slice(m[0].length); }
+        }
+      }
+      prevDanda = /॥\s*$/.test(txt);
+    });
+  });
+}
+function unwrapGgs(){
+  ggsDandaFixes.forEach(function(f){ f.node.textContent = f.text; });
+  ggsDandaFixes = [];
+  if(!ggsPages.length && !ggsBookEl){ ggsVault = null; return; }
+  var anchor = contentEl.querySelector(".end-nav");
+  var firstSec = contentEl.querySelector("section.section, section.stream-sec");
+  ggsPages.forEach(function(u){
+    if(!u.el) return;
+    var frame = u.el.querySelector(".ggs-frame");
+    var nodes = frame ? Array.prototype.slice.call(frame.childNodes) : [];
+    nodes.forEach(function(n){
+      var os = n.getAttribute ? n.getAttribute("data-ggs-owner") : null;
+      var ownerSec = os ? contentEl.querySelector('section[data-stamp="' + os + '"]') : (u.owner ? contentEl.querySelector('section[data-stamp="' + u.owner + '"]') : null);
+      if(ownerSec) ownerSec.appendChild(n);
+      else if(u.titlePage && firstSec) firstSec.parentNode.insertBefore(n, firstSec);
+      else if(anchor) contentEl.insertBefore(n, anchor);
+      else contentEl.appendChild(n);
+    });
+    u.el = null;
+  });
+  ggsPages = [];
+  if(ggsBookEl){ ggsBookEl.remove(); ggsBookEl = null; }
+  if(ggsVault){ ggsVault.remove(); ggsVault = null; }
+  ggsBlankEl = null;
+  contentEl.querySelectorAll(".ang-sep").forEach(function(s){ s.style.display = ""; });
+  var bh = contentEl.querySelector(".book-head"); if(bh) bh.style.display = "";
+  ggsFlipping = false;
+}
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){
+    if(document.body.classList.contains("ggs")) layoutGgs();
+  });
+}
 
 /* ================= init ================= */
 paintContinue();

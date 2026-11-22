@@ -49,7 +49,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-html{scrollbar-color:var(--hairline) transparent}
+html{scrollbar-color:var(--hairline) transparent; scroll-padding-top:88px}
 body{
   margin:0; background:var(--canvas); color:var(--ink);
   font-family:var(--sans); font-size:16px; line-height:1.45;
@@ -69,9 +69,10 @@ button{font-family:inherit; color:inherit; background:none; border:0; cursor:poi
   border:1px solid var(--hairline); background:var(--page)}
 .lib-head h1{font-family:var(--serif-latin); font-weight:600; font-size:27px; margin:0; letter-spacing:.1px}
 .lib-head p{margin:1px 0 0; color:var(--ink-2); font-size:13.5px}
+@media(max-width:640px){ .lib-head p{font-size:12.5px; white-space:nowrap} }
 .lib-head .sp{flex:1}
 .theme-cycle{width:34px; height:34px; border-radius:50%; border:1px solid var(--hairline); flex:none;
-  box-shadow:inset 0 0 0 3px var(--canvas)}
+  display:grid; place-items:center; color:var(--ink-2); background:var(--page)}
 :root[data-theme="light"] .theme-cycle{background:#FDFDFA}
 :root[data-theme="sepia"] .theme-cycle{background:#F1E5C6}
 :root[data-theme="dark"] .theme-cycle{background:#17181A}
@@ -108,6 +109,8 @@ button{font-family:inherit; color:inherit; background:none; border:0; cursor:poi
 .cover .cv-en{font-family:var(--serif-latin); font-size:14.5px; color:rgba(244,237,218,.78); margin-top:8px; letter-spacing:.2px}
 .cover .cv-rule{width:34px; height:1px; background:rgba(244,237,218,.45); margin-top:14px}
 .cover .cv-when{font-size:11.5px; color:rgba(244,237,218,.62); font-family:var(--sans); margin-top:8px; letter-spacing:.4px}
+.cover .cv-colophon{position:absolute; left:0; right:0; bottom:16px; text-align:center; font-family:var(--serif);
+  font-size:15px; color:rgba(244,237,218,.42)}
 .ang-card{background:var(--page); border:1px solid var(--hairline); border-radius:16px; padding:20px;
   box-shadow:var(--shadow); display:flex; flex-wrap:wrap; gap:16px; align-items:center}
 .ang-card .ac-t{font-family:var(--serif); font-size:20px; font-weight:600}
@@ -122,7 +125,7 @@ button{font-family:inherit; color:inherit; background:none; border:0; cursor:poi
   .lib-layout{display:grid; grid-template-columns:210px 1fr; gap:44px; align-items:start}
   .lib-rail{position:sticky; top:28px; display:flex; flex-direction:column; gap:4px}
   .lib-rail a{color:var(--ink-2); text-decoration:none; font-size:14.5px; padding:8px 10px; border-radius:8px}
-  .lib-rail a.on{color:var(--ink); background:var(--page); box-shadow:inset 0 0 0 1px var(--hairline)}
+  .lib-rail a.on{color:var(--ink); background:color-mix(in srgb, var(--ink) 9%, transparent); font-weight:600}
   .lib-rail .rail-t{font-size:12px; color:var(--ink-3); margin:14px 10px 4px}
 .rail-ang{display:flex; gap:6px; padding:0 10px}
 .rail-ang input{width:104px; padding:8px 10px; font-size:14px; border:1px solid var(--hairline); border-radius:8px; background:var(--page); color:var(--ink); font-family:inherit}
@@ -190,7 +193,7 @@ body.chrome-off .topbar{opacity:0; pointer-events:none; transform:translateY(-6p
 .state-card button{margin-top:16px; background:var(--accent); color:#FFF8EC; padding:11px 22px; border-radius:999px; font-weight:600}
 
 /* ============ spread mode (desktop pothi) ============ */
-body.spread .page-wrap{max-width:1240px; padding-top:calc(96px + env(safe-area-inset-top))}
+body.spread .page-wrap{max-width:1240px; padding-top:calc(96px + env(safe-area-inset-top)); padding-bottom:300px}
 body.spread .sheet{background:transparent; box-shadow:none; padding:0}
 .spread-row{display:flex; gap:0; margin:0 auto 26px; max-width:1180px; filter:drop-shadow(0 14px 34px rgba(0,0,0,.20))}
 .pg{flex:1 1 0; min-width:0; background:var(--page); padding:30px 34px 36px; position:relative; display:flex; flex-direction:column}
@@ -301,7 +304,7 @@ body.chrome-off .player{opacity:0; pointer-events:none; transform:translate(-50%
         <a href="#sehajCard">Sehaj Paath</a>
         <div class="rail-t">Go to Ang</div>
         <form class="rail-ang" id="railAngForm">
-          <input id="railAngInput" type="number" min="1" max="1430" inputmode="numeric" placeholder="Ang 1–1430" aria-label="Ang number">
+          <input id="railAngInput" type="number" min="1" max="1430" inputmode="numeric" placeholder="1–1430" aria-label="Ang number">
           <button type="submit">Read</button>
         </form>
         <div class="rail-t">Theme</div>
@@ -319,7 +322,7 @@ body.chrome-off .player{opacity:0; pointer-events:none; transform:translate(-50%
             <p>Sehaj Paath by Bhagat Jaswant Singh Ji</p>
           </div>
           <div class="sp"></div>
-          <button class="theme-cycle" id="themeCycle" aria-label="Switch theme"></button>
+          <button class="theme-cycle" id="themeCycle" aria-label="Switch theme"><svg width="17" height="17" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5 a7.5 7.5 0 0 1 0 15 z" fill="currentColor"/></svg></button>
         </header>
 
         <button class="continue-card" id="continueCard">
@@ -536,6 +539,7 @@ shelf.innerHTML = BANIS.map(function(b){
         '<span class="cv-rule"></span>' +
         '<span class="cv-when">' + esc(b.note) + '</span>' +
       '</span>' +
+      '<span class="cv-colophon">ੴ</span>' +
     '</span>' +
   '</button>';
 }).join("");
@@ -603,7 +607,7 @@ var hideTimer = 0;
 function showChrome(){
   document.body.classList.remove("chrome-off");
   clearTimeout(hideTimer);
-  if(!audio.paused) hideTimer = setTimeout(function(){ if(!$("aaPanel").classList.contains("open") && !$("player").classList.contains("open")) document.body.classList.add("chrome-off"); }, 3400);
+  if(!audio.paused) hideTimer = setTimeout(function(){ if(!$("aaPanel").classList.contains("open") && !$("player").classList.contains("open")) document.body.classList.add("chrome-off"); }, 2200);
 }
 document.addEventListener("scroll", function(){
   if(document.body.getAttribute("data-view") !== "reader") return;

@@ -218,17 +218,17 @@ body.spread .turn-zone, body.ggs .turn-zone{display:block}
 
 /* ============ GGS print mode (fixed pages, page-flip; desktop + tablets) ============ */
 body.ggs{overflow:hidden}
-body.ggs .page-wrap{max-width:none; height:calc(100dvh - 62px); padding:calc(64px + env(safe-area-inset-top)) 12px calc(96px + env(safe-area-inset-bottom)); display:flex; align-items:center; justify-content:center}
+body.ggs .page-wrap{max-width:none; height:calc(100dvh - 62px); container-type:size; padding:calc(14px + env(safe-area-inset-top)) 10px calc(86px + env(safe-area-inset-bottom)); display:flex; align-items:center; justify-content:center}
 body.ggs .sheet{background:transparent; box-shadow:none; padding:0; width:100%; display:flex; justify-content:center}
 body.ggs .end-nav, body.ggs .end-note, body.ggs .ang-sep{display:none}
 body.ggs .tt-en{display:none}
 .ggs-vault{display:none}
-.ggs-book{position:relative; flex:none; width:min(1240px, calc(100vw - 36px), calc((100dvh - 205px) * 1.54)); aspect-ratio:1.54; perspective:3800px; filter:drop-shadow(0 10px 24px rgba(0,0,0,.22)); touch-action:pan-y}
-.ggs-book::before{content:""; position:absolute; inset:-8px -8px -11px; background:linear-gradient(140deg, #4A2C1C, #31200F); border-radius:7px 11px 11px 7px; z-index:-1}
+.ggs-book{position:relative; flex:none; width:min(1240px, calc(100vw - 36px), calc((100dvh - 205px) * 1.54)); width:min(1400px, 98cqw, 152cqh); aspect-ratio:1.54; perspective:3800px; touch-action:pan-y}
+.ggs-book::before{content:""; position:absolute; inset:-8px -8px -11px; background:linear-gradient(140deg, #4A2C1C, #31200F); border-radius:7px 11px 11px 7px; z-index:-1; box-shadow:0 14px 30px rgba(0,0,0,.26)}
 body.ggs[data-ggs-per="1"] .ggs-book::before{border-radius:11px}
 :root[data-theme="dark"] .ggs-book::before{background:linear-gradient(140deg, #2A1D13, #191008)}
 .ggs-book.dragging{user-select:none; cursor:grabbing}
-body.ggs[data-ggs-per="1"] .ggs-book{width:min(620px, calc(100vw - 36px), calc((100dvh - 205px) * .77)); aspect-ratio:.77}
+body.ggs[data-ggs-per="1"] .ggs-book{width:min(620px, calc(100vw - 36px), calc((100dvh - 205px) * .77)); width:min(680px, 97cqw, 76cqh); aspect-ratio:.77}
 .gpg{position:absolute; top:0; bottom:0; width:50%; background:var(--page); background-image:radial-gradient(115% 90% at 50% 38%, rgba(0,0,0,0) 62%, color-mix(in srgb, var(--ink) 5%, transparent)); padding:2.4% 2.6%; display:flex; flex-direction:column; container-type:inline-size}
 .gpg.left{left:0; padding-right:1.7%; border-radius:4px 2px 2px 4px; box-shadow:inset -13px 0 22px -15px rgba(0,0,0,.30)}
 .gpg.right{right:0; padding-left:1.7%; border-radius:2px 4px 4px 2px; box-shadow:inset 13px 0 22px -15px rgba(0,0,0,.30)}
@@ -1839,6 +1839,8 @@ function ggsBuildLeaf(dir){
   ggsBookEl.appendChild(castL); ggsBookEl.appendChild(castR);
   ggsBookEl.appendChild(leaf);
   void ggsBookEl.offsetWidth; /* the revealed page is painted before the first frame */
+  /* typeset the turning + revealed pages now, so nothing rescales mid-turn or on landing */
+  [curL, curR, nxtL, nxtR].forEach(function(u){ if(u) ggsFitPage(u.el); });
   return {leaf:leaf, frontShade:frontShade, backShade:backShade, castL:castL, castR:castR,
           shadow:ggsBookEl.querySelector(".ggs-shadow"), dir:dir, target:target,
           from: dir > 0 ? 0 : -180, to: dir > 0 ? -180 : 0, shadeMul:1};
@@ -1895,6 +1897,7 @@ function ggsSlideTurn(dir, target){
   ggsFlipping = true;
   var curEl = cur && cur.el, nxtEl = nxt.el;
   ggsBookEl.appendChild(nxtEl);
+  ggsFitPage(nxtEl);
   var org = dir > 0 ? "left center" : "right center";
   nxtEl.style.cssText = "opacity:0; transform:translateX(" + (dir > 0 ? 36 : -36) + "px) rotateY(" + (dir > 0 ? 5 : -5) + "deg); transform-origin:" + org;
   requestAnimationFrame(function(){

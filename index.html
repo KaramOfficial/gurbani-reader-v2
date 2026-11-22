@@ -223,11 +223,11 @@ body.ggs .sheet{background:transparent; box-shadow:none; padding:0; width:100%; 
 body.ggs .end-nav, body.ggs .end-note, body.ggs .ang-sep{display:none}
 body.ggs .tt-en{display:none}
 .ggs-vault{display:none}
-.ggs-book{position:relative; flex:none; width:min(1240px, calc(100vw - 36px), calc((100dvh - 205px) * 1.54)); width:min(1400px, 98cqw, 152cqh); aspect-ratio:1.54; perspective:3800px; touch-action:pan-y}
+.ggs-book{position:relative; flex:none; width:min(calc(100vw - 36px), calc((100dvh - 205px) * 1.54)); width:min(98cqw, 152cqh); aspect-ratio:1.54; perspective:3800px; touch-action:pan-y}
 .ggs-book::before{content:""; position:absolute; inset:-8px -8px -11px; background:linear-gradient(140deg, color-mix(in srgb, var(--accent) 58%, #1D0F04), color-mix(in srgb, var(--accent) 34%, #120802)); border-radius:7px 11px 11px 7px; z-index:-1; box-shadow:var(--shadow)}
 body.ggs[data-ggs-per="1"] .ggs-book::before{border-radius:11px}
 .ggs-book.dragging{user-select:none; cursor:grabbing}
-body.ggs[data-ggs-per="1"] .ggs-book{width:min(620px, calc(100vw - 36px), calc((100dvh - 205px) * .77)); width:min(680px, 97cqw, 76cqh); aspect-ratio:.77}
+body.ggs[data-ggs-per="1"] .ggs-book{width:min(calc(100vw - 36px), calc((100dvh - 205px) * .77)); width:min(97cqw, 76cqh); aspect-ratio:.77}
 .gpg{position:absolute; top:0; bottom:0; width:50%; background:var(--page); background-image:radial-gradient(115% 90% at 50% 38%, rgba(0,0,0,0) 62%, color-mix(in srgb, var(--ink) 5%, transparent)); padding:2.4% 2.6%; display:flex; flex-direction:column; container-type:inline-size}
 .gpg.left{left:0; padding-right:1.7%; border-radius:4px 2px 2px 4px; box-shadow:inset -13px 0 22px -15px rgba(0,0,0,.22)}
 .gpg.right{right:0; padding-left:1.7%; border-radius:2px 4px 4px 2px; box-shadow:inset 13px 0 22px -15px rgba(0,0,0,.22)}
